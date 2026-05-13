@@ -1,101 +1,80 @@
-import Image from "next/image";
+'use client'
 
-export default function Home() {
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { Plus, ChevronRight, History } from 'lucide-react'
+import { getWorkouts } from '@/lib/storage'
+import { Workout } from '@/lib/types'
+import { DAY_NAMES, DAY_FULL } from '@/lib/utils'
+
+export default function HomePage() {
+  const router = useRouter()
+  const [workouts, setWorkouts] = useState<Workout[]>([])
+  const today = new Date().getDay()
+
+  useEffect(() => {
+    setWorkouts(getWorkouts())
+  }, [])
+
+  function workoutForDay(day: number): Workout | null {
+    return workouts.find(w => w.days.includes(day)) ?? null
+  }
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="flex flex-col min-h-dvh bg-black">
+      <div className="flex items-center justify-between px-5 pt-14 pb-6">
+        <h1 className="text-2xl font-black tracking-tight">GRIND</h1>
+        <button onClick={() => router.push('/history')} className="text-[#888] hover:text-white transition-colors">
+          <History size={22} />
+        </button>
+      </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      <div className="flex-1 px-4 space-y-2 pb-24">
+        {DAY_FULL.map((_name, day) => {
+          const workout = workoutForDay(day)
+          const isToday = day === today
+
+          return (
+            <button
+              key={day}
+              onClick={() => workout ? router.push(`/workout/${workout.id}`) : router.push('/routine')}
+              className={`w-full flex items-center justify-between px-4 py-4 rounded-xl border transition-all active:scale-[0.98] ${
+                isToday
+                  ? 'bg-white text-black border-white'
+                  : workout
+                    ? 'bg-[#111] border-[#222] hover:border-[#444]'
+                    : 'bg-[#0a0a0a] border-[#1a1a1a] hover:border-[#333]'
+              }`}
+            >
+              <div className="flex items-center gap-4">
+                <span className={`font-mono text-xs w-7 ${isToday ? 'text-black/50' : 'text-[#555]'}`}>
+                  {DAY_NAMES[day].toUpperCase()}
+                </span>
+                <div className="text-left">
+                  {workout ? (
+                    <>
+                      <p className={`font-bold text-base leading-tight ${isToday ? 'text-black' : ''}`}>{workout.name}</p>
+                      <p className={`text-xs mt-0.5 ${isToday ? 'text-black/50' : 'text-[#555]'}`}>
+                        {workout.exercises.length} ejercicios
+                      </p>
+                    </>
+                  ) : (
+                    <p className="text-[#444] text-sm">Sin entreno</p>
+                  )}
+                </div>
+              </div>
+              <ChevronRight size={16} className={isToday ? 'text-black/30' : 'text-[#333]'} />
+            </button>
+          )
+        })}
+      </div>
+
+      <button
+        onClick={() => router.push('/routine')}
+        className="fixed bottom-8 right-6 w-14 h-14 bg-white text-black rounded-full flex items-center justify-center shadow-2xl hover:bg-[#eee] transition-colors active:scale-95"
+      >
+        <Plus size={24} strokeWidth={2.5} />
+      </button>
     </div>
-  );
+  )
 }

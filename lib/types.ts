@@ -57,3 +57,51 @@ export interface Session {
   totalVolume: number
   totalSets: number
 }
+
+export interface ExerciseTemplate {
+  id: string
+  name: string
+  muscle: string
+  icon: string
+  variants?: { label: string; description: string }[]
+}
+
+export interface PostWorkoutNote {
+  sessionId: string
+  text?: string
+  photoDataUrl?: string
+  voiceDataUrl?: string
+  savedAt: number
+}
+
+export interface BodyStat {
+  id: string
+  date: string // YYYY-MM-DD
+  weight?: number
+  fat?: number
+  muscle?: number
+}
+
+export interface AnkleTest {
+  id: string
+  date: string // YYYY-MM-DD
+  seconds: number
+  side: 'left' | 'right'
+}
+
+export interface Goal {
+  id: string
+  name: string
+  target: number
+  current: number
+  unit: string
+  createdAt: number
+  completedAt?: number
+}
+
+export interface NotificationSettings {
+  reminderEnabled: boolean
+  reminderTime: string // HH:MM
+  streakAlerts: boolean
+  rankAlerts: boolean
+}

@@ -6,86 +6,9 @@ import { ArrowLeft, Plus, Trash2, GripVertical, Check, X, Search } from 'lucide-
 import { getWorkouts, saveWorkouts } from '@/lib/storage'
 import { Workout, Exercise } from '@/lib/types'
 import { DAY_NAMES, genId } from '@/lib/utils'
-import { EXERCISE_LIBRARY, MUSCLE_GROUPS } from '@/lib/exerciseData'
 import { Suspense } from 'react'
 import BottomNav from '@/components/BottomNav'
-
-// ── Library picker modal ─────────────────────────────────
-
-function LibraryPicker({ onSelect, onClose }: {
-  onSelect: (name: string, muscle: string) => void
-  onClose: () => void
-}) {
-  const [search, setSearch] = useState('')
-  const [group, setGroup] = useState('Todo')
-  const groups = ['Todo', ...MUSCLE_GROUPS]
-
-  const filtered = EXERCISE_LIBRARY.filter(ex => {
-    const matchGroup = group === 'Todo' || ex.muscle === group
-    const matchSearch = search.trim() === '' || ex.name.toLowerCase().includes(search.toLowerCase())
-    return matchGroup && matchSearch
-  })
-
-  return (
-    <div className="fixed inset-0 z-50 bg-black flex flex-col max-w-md mx-auto">
-      <div className="flex items-center gap-3 px-5 pt-14 pb-4">
-        <button onClick={onClose} className="text-[#888] hover:text-white transition-colors p-1 -ml-1">
-          <X size={22} />
-        </button>
-        <h2 className="text-xl font-black tracking-tight">Biblioteca</h2>
-      </div>
-
-      <div className="px-5 mb-3">
-        <div className="relative">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#444]" />
-          <input
-            type="text"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            placeholder="Buscar..."
-            autoFocus
-            className="w-full h-10 bg-[#111] border border-[#222] rounded-xl pl-9 pr-4 text-sm focus:outline-none focus:border-white/30 placeholder:text-[#333]"
-          />
-        </div>
-      </div>
-
-      <div className="px-5 mb-4">
-        <div className="flex gap-1.5 overflow-x-auto pb-1">
-          {groups.map(g => (
-            <button
-              key={g}
-              onClick={() => setGroup(g)}
-              className={`shrink-0 px-3 h-7 rounded-full text-[11px] font-semibold transition-all ${
-                group === g ? 'bg-white text-black' : 'bg-[#111] border border-[#222] text-[#555]'
-              }`}
-            >
-              {g}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="flex-1 px-4 overflow-y-auto space-y-1 pb-8">
-        {filtered.map(ex => (
-          <button
-            key={ex.id}
-            onClick={() => { onSelect(ex.name, ex.muscle); onClose() }}
-            className="w-full flex items-center gap-3 px-4 py-3 bg-[#111] border border-[#1a1a1a] rounded-xl text-left active:scale-[0.98] transition-transform hover:border-[#333]"
-          >
-            <span className="text-base">{ex.icon}</span>
-            <div>
-              <p className="font-semibold text-sm">{ex.name}</p>
-              <p className="text-[#555] text-xs">{ex.muscle}</p>
-            </div>
-          </button>
-        ))}
-        {filtered.length === 0 && (
-          <p className="text-center text-[#444] text-sm py-12">Sin resultados</p>
-        )}
-      </div>
-    </div>
-  )
-}
+import WgerPicker from '@/components/WgerPicker'
 
 // ── Main content ─────────────────────────────────────────
 
@@ -238,7 +161,7 @@ function RoutineContent() {
   return (
     <>
       {showLibrary && (
-        <LibraryPicker
+        <WgerPicker
           onSelect={(name, muscle) => {
             setNewExName(name)
             setNewExMuscle(muscle)

@@ -72,7 +72,7 @@ export default function GoalsPage() {
         <h1 className="text-xl font-black tracking-tight">Objetivos</h1>
       </div>
 
-      <div className="flex-1 px-4 pb-28 overflow-y-auto space-y-5">
+      <div className="flex-1 px-4 pb-36 overflow-y-auto space-y-5">
 
         {/* Add button */}
         <button

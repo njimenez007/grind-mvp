@@ -77,7 +77,7 @@ export default function ExercisesPage() {
       </div>
 
       {/* Exercise list */}
-      <div className="flex-1 px-4 pb-28 space-y-5 overflow-y-auto">
+      <div className="flex-1 px-4 pb-36 space-y-5 overflow-y-auto">
         {Object.entries(grouped).map(([group, exercises]) => (
           <div key={group}>
             <p className="text-[#444] text-[10px] uppercase tracking-widest font-medium mb-2 px-1">

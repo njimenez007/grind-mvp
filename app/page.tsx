@@ -74,7 +74,7 @@ export default function HomePage() {
         </button>
       </div>
 
-      <div className="flex-1 px-5 pb-28 overflow-y-auto">
+      <div className="flex-1 px-5 pb-36 overflow-y-auto">
         {/* Greeting */}
         <div className="mb-5">
           <p className="text-[#555] text-sm">

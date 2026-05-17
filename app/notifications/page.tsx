@@ -65,7 +65,7 @@ export default function NotificationsPage() {
         <h1 className="text-xl font-black tracking-tight">Notificaciones</h1>
       </div>
 
-      <div className="flex-1 px-4 pb-28 space-y-4 overflow-y-auto">
+      <div className="flex-1 px-4 pb-36 space-y-4 overflow-y-auto">
 
         {/* Browser permission */}
         <div className="bg-[#111] border border-[#222] rounded-xl p-4">

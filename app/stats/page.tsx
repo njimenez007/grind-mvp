@@ -116,7 +116,7 @@ export default function StatsPage() {
         </div>
       </div>
 
-      <div className="flex-1 px-4 pb-28 overflow-y-auto">
+      <div className="flex-1 px-4 pb-36 overflow-y-auto">
 
         {/* ── CONSISTENCIA ─────────────────────────────── */}
         {tab === 'consistencia' && (

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ChevronRight, Flame, Bell, Play } from 'lucide-react'
-import { getWorkouts, getSessions } from '@/lib/storage'
+import { getWorkouts, getSessions, getWorkoutExercises } from '@/lib/storage'
 import { Workout } from '@/lib/types'
 import { DAY_NAMES, DAY_FULL } from '@/lib/utils'
 import { calculateStreak } from '@/lib/gamification'
@@ -93,8 +93,7 @@ export default function HomePage() {
                 <p className="text-[10px] font-semibold uppercase tracking-[0.20em] text-[#8A8A8A] mb-2">HOY</p>
                 <h3 className="text-2xl font-black tracking-tight">{todayWorkout.name}</h3>
                 <p className="text-[#8A8A8A] text-[11px] uppercase tracking-[0.12em] mt-1.5">
-                  {todayWorkout.exercises.length} EJERCICIOS ·{' '}
-                  ~{Math.round(todayWorkout.exercises.reduce((a, ex) => a + ex.sets.length, 0) * 2.5)} MIN
+                  {(() => { const exs = getWorkoutExercises(todayWorkout); return `${exs.length} EJERCICIOS · ~${Math.round(exs.reduce((a, ex) => a + ex.sets.length, 0) * 2.5)} MIN` })()}
                 </p>
               </div>
               <button

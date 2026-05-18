@@ -3,12 +3,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import { Check, Plus } from 'lucide-react'
-import { getWorkoutById } from '@/lib/storage'
+import { getWorkoutById, getWorkoutExercises } from '@/lib/storage'
 import { ActiveExercise, ActiveSet } from '@/lib/types'
 import { formatTime, genId } from '@/lib/utils'
 import RestTimer from '@/components/RestTimer'
 
-const REST_SECONDS = 90
+const DEFAULT_REST = 90
 
 export default function SessionPage() {
   const router = useRouter()
@@ -18,34 +18,34 @@ export default function SessionPage() {
   const [activeIdx, setActiveIdx] = useState(0)
   const [elapsed, setElapsed] = useState(0)
   const [restActive, setRestActive] = useState(false)
-  const [restSeconds, setRestSeconds] = useState(REST_SECONDS)
+  const [restSeconds, setRestSeconds] = useState(DEFAULT_REST)
+  const [restTotal, setRestTotal] = useState(DEFAULT_REST)
   const startRef = useRef(Date.now())
   const restRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const exerciseRefs = useRef<(HTMLDivElement | null)[]>([])
 
-  // Load workout
   useEffect(() => {
     const workout = getWorkoutById(id)
     if (!workout) { router.push('/'); return }
     setWorkoutName(workout.name)
+    const flat = getWorkoutExercises(workout)
     setExercises(
-      workout.exercises.map(ex => ({
+      flat.map(ex => ({
         id: ex.id,
         name: ex.name,
         muscle: ex.muscle,
+        restSeconds: ex.restSeconds ?? DEFAULT_REST,
         completed: false,
         sets: ex.sets.map(s => ({ reps: String(s.reps), weight: String(s.weight), completed: false })),
       }))
     )
   }, [id, router])
 
-  // Workout timer
   useEffect(() => {
     const interval = setInterval(() => setElapsed(Math.floor((Date.now() - startRef.current) / 1000)), 1000)
     return () => clearInterval(interval)
   }, [])
 
-  // Rest timer countdown
   useEffect(() => {
     if (restActive) {
       restRef.current = setInterval(() => setRestSeconds(s => Math.max(0, s - 1)), 1000)
@@ -57,14 +57,13 @@ export default function SessionPage() {
 
   const completedCount = exercises.filter(e => e.completed).length
 
-  function startRest() {
-    setRestSeconds(REST_SECONDS)
+  function startRest(seconds: number) {
+    setRestTotal(seconds)
+    setRestSeconds(seconds)
     setRestActive(true)
   }
 
-  const handleRestEnd = useCallback(() => {
-    setRestActive(false)
-  }, [])
+  const handleRestEnd = useCallback(() => { setRestActive(false) }, [])
 
   function completeSet(exIdx: number, setIdx: number) {
     setExercises(prev => {
@@ -74,8 +73,6 @@ export default function SessionPage() {
         const allDone = sets.every(s => s.completed)
         return { ...ex, sets, completed: allDone }
       })
-
-      // Advance to next exercise if all sets done
       const ex = next[exIdx]
       if (ex.completed) {
         const nextIdx = next.findIndex((e, i) => i > exIdx && !e.completed)
@@ -85,14 +82,12 @@ export default function SessionPage() {
             exerciseRefs.current[nextIdx]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
           }, 150)
         } else {
-          // All exercises done — keep activeIdx at last
           setActiveIdx(exIdx)
         }
       }
-
       return next
     })
-    startRest()
+    startRest(exercises[exIdx]?.restSeconds ?? DEFAULT_REST)
   }
 
   function updateSet(exIdx: number, setIdx: number, field: 'reps' | 'weight', value: string) {
@@ -113,15 +108,7 @@ export default function SessionPage() {
   }
 
   function finish() {
-    // Build session data and pass via sessionStorage to avoid URL length limits
-    const session = {
-      id: genId(),
-      workoutId: id,
-      workoutName,
-      startedAt: startRef.current,
-      elapsed,
-      exercises,
-    }
+    const session = { id: genId(), workoutId: id, workoutName, startedAt: startRef.current, elapsed, exercises }
     sessionStorage.setItem('pending_session', JSON.stringify(session))
     router.push(`/session/${id}/complete`)
   }
@@ -130,7 +117,6 @@ export default function SessionPage() {
 
   return (
     <div className="flex flex-col min-h-dvh bg-black">
-      {/* Sticky header */}
       <div className="sticky top-0 z-10 bg-black border-b border-[#111] px-5 pt-12 pb-4">
         <div className="flex items-start justify-between mb-3">
           <div>
@@ -139,7 +125,6 @@ export default function SessionPage() {
           </div>
           <span className="font-mono text-sm text-[#555] mt-1">{completedCount}/{exercises.length}</span>
         </div>
-        {/* Progress bar */}
         <div className="h-px bg-[#1a1a1a] w-full overflow-hidden rounded-full">
           <div
             className="h-full bg-white transition-all duration-500"
@@ -148,7 +133,6 @@ export default function SessionPage() {
         </div>
       </div>
 
-      {/* Exercises */}
       <div className="flex-1 px-4 py-4 space-y-3 pb-36">
         {exercises.map((ex, exIdx) => {
           const isActive = exIdx === activeIdx && !ex.completed
@@ -156,18 +140,12 @@ export default function SessionPage() {
           const isPending = !isActive && !isDone
 
           return (
-            <div
-              key={ex.id}
-              ref={el => { exerciseRefs.current[exIdx] = el }}
-            >
-              {/* Collapsed states */}
+            <div key={ex.id} ref={el => { exerciseRefs.current[exIdx] = el }}>
               {(isDone || isPending) && (
                 <button
                   onClick={() => !isDone && setActiveIdx(exIdx)}
                   className={`w-full flex items-center justify-between px-4 py-3 rounded-xl border transition-all ${
-                    isDone
-                      ? 'bg-[#0d0d0d] border-[#1a1a1a]'
-                      : 'bg-[#0a0a0a] border-[#111] hover:border-[#222]'
+                    isDone ? 'bg-[#0d0d0d] border-[#1a1a1a]' : 'bg-[#0a0a0a] border-[#111] hover:border-[#222]'
                   }`}
                 >
                   <div className="flex items-center gap-3">
@@ -181,37 +159,33 @@ export default function SessionPage() {
                 </button>
               )}
 
-              {/* Expanded — active exercise */}
               {isActive && (
                 <div className="bg-[#111] border border-white/20 rounded-xl overflow-hidden">
                   <div className="px-4 pt-4 pb-3 border-b border-[#1e1e1e]">
                     <p className="font-bold text-lg leading-tight">{ex.name}</p>
-                    <p className="text-xs text-[#555] mt-0.5">{ex.muscle}</p>
+                    <p className="text-xs text-[#555] mt-0.5">
+                      {ex.muscle}{ex.restSeconds > 0 && ` · ${ex.restSeconds}s descanso`}
+                    </p>
                   </div>
-
                   <div className="px-4 py-3 space-y-2">
-                    {/* Column headers */}
                     <div className="flex items-center gap-2 px-1 mb-1">
                       <span className="w-6" />
                       <span className="flex-1 text-center text-[10px] text-[#555] font-mono uppercase tracking-wider">Reps</span>
                       <span className="flex-1 text-center text-[10px] text-[#555] font-mono uppercase tracking-wider">Kg</span>
                       <span className="w-12" />
                     </div>
-
                     {ex.sets.map((set, setIdx) => (
                       <div key={setIdx} className={`flex items-center gap-2 transition-opacity ${set.completed ? 'opacity-40' : ''}`}>
                         <span className="font-mono text-xs text-[#444] w-6 text-center">{setIdx + 1}</span>
                         <input
-                          type="number"
-                          inputMode="numeric"
+                          type="number" inputMode="numeric"
                           value={set.reps}
                           onChange={e => updateSet(exIdx, setIdx, 'reps', e.target.value)}
                           disabled={set.completed}
                           className="flex-1 h-11 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-center font-mono text-lg font-bold focus:outline-none focus:border-white/40 disabled:pointer-events-none"
                         />
                         <input
-                          type="number"
-                          inputMode="decimal"
+                          type="number" inputMode="decimal"
                           value={set.weight}
                           onChange={e => updateSet(exIdx, setIdx, 'weight', e.target.value)}
                           disabled={set.completed}
@@ -230,7 +204,6 @@ export default function SessionPage() {
                         </button>
                       </div>
                     ))}
-
                     <button
                       onClick={() => addSet(exIdx)}
                       className="w-full h-9 border border-dashed border-[#2a2a2a] rounded-lg text-xs text-[#555] hover:text-white hover:border-[#444] transition-colors flex items-center justify-center gap-1.5 mt-1"
@@ -245,28 +218,19 @@ export default function SessionPage() {
         })}
       </div>
 
-      {/* Footer */}
       <div className="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-4 bg-black border-t border-[#111]">
         <button
           onClick={finish}
           className={`w-full h-14 font-bold text-base rounded-xl tracking-wide transition-all active:scale-[0.98] ${
-            allDone
-              ? 'bg-white text-black'
-              : 'bg-[#111] border border-[#222] text-[#888]'
+            allDone ? 'bg-white text-black' : 'bg-[#111] border border-[#222] text-[#888]'
           }`}
         >
           {allDone ? 'Ver resumen' : 'Finalizar entreno'}
         </button>
       </div>
 
-      {/* Rest timer overlay */}
       {restActive && (
-        <RestTimer
-          seconds={restSeconds}
-          total={REST_SECONDS}
-          onSkip={handleRestEnd}
-          onEnd={handleRestEnd}
-        />
+        <RestTimer seconds={restSeconds} total={restTotal} onSkip={handleRestEnd} onEnd={handleRestEnd} />
       )}
     </div>
   )

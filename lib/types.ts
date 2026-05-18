@@ -9,14 +9,42 @@ export interface Exercise {
   muscle: string
   sets: PlannedSet[]
   notes?: string
+  restSeconds?: number
+}
+
+// ── Routine block types (new system) ────────────────────────────────────────
+
+export type WeightType = 'bodyweight' | 'kg'
+export type BlockType = 'warmup' | 'main' | 'closing'
+
+export interface RoutineExercise {
+  id: string
+  exerciseId: string
+  exerciseName: string
+  muscle: string
+  selectedVariant: string   // 'A' | 'B' | 'C' | 'D'
+  variantName: string
+  sets: number
+  reps: number
+  restSeconds: number
+  weightType: WeightType
+  defaultWeight: number     // kg; 0 for bodyweight
+}
+
+export interface RoutineBlock {
+  type: BlockType
+  exercises: RoutineExercise[]
 }
 
 export interface Workout {
   id: string
   name: string
-  days: number[] // 0=Dom, 1=Lun, 2=Mar, 3=Mié, 4=Jue, 5=Vie, 6=Sáb
-  exercises: Exercise[]
+  days: number[]            // 0=Dom, 1=Lun … 6=Sáb
+  blocks: RoutineBlock[]    // new format
+  exercises?: Exercise[]    // legacy fallback
 }
+
+// ── Session tracking ──────────────────────────────────────────────────────────
 
 export interface ActiveSet {
   reps: string
@@ -29,6 +57,7 @@ export interface ActiveExercise {
   id: string
   name: string
   muscle: string
+  restSeconds: number
   sets: ActiveSet[]
   completed: boolean
 }

@@ -1,5 +1,23 @@
-import { Workout, Session, PostWorkoutNote, BodyStat, AnkleTest, Goal, NotificationSettings } from './types'
+import { Workout, Exercise, Session, PostWorkoutNote, BodyStat, AnkleTest, Goal, NotificationSettings } from './types'
 import { defaultWorkouts } from './defaultData'
+
+export function getWorkoutExercises(workout: Workout): Exercise[] {
+  if (workout.blocks?.length) {
+    return workout.blocks.flatMap(block =>
+      block.exercises.map(rex => ({
+        id: rex.id,
+        name: rex.variantName ? `${rex.exerciseName} — ${rex.variantName}` : rex.exerciseName,
+        muscle: rex.muscle,
+        restSeconds: rex.restSeconds,
+        sets: Array.from({ length: rex.sets }, () => ({
+          reps: rex.reps,
+          weight: rex.weightType === 'bodyweight' ? 0 : rex.defaultWeight,
+        })),
+      }))
+    )
+  }
+  return workout.exercises ?? []
+}
 
 const WORKOUTS_KEY = 'grind_workouts'
 const SESSIONS_KEY = 'grind_sessions'

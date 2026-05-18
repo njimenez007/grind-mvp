@@ -3,21 +3,24 @@
 import { useEffect, useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import { ArrowLeft, Clock, Flame, Edit2 } from 'lucide-react'
-import { getWorkoutById } from '@/lib/storage'
-import { Workout } from '@/lib/types'
+import { getWorkoutById, getWorkoutExercises } from '@/lib/storage'
+import { Exercise, Workout } from '@/lib/types'
 
 export default function WorkoutDetailPage() {
   const router = useRouter()
   const { id } = useParams<{ id: string }>()
   const [workout, setWorkout] = useState<Workout | null>(null)
+  const [exercises, setExercises] = useState<Exercise[]>([])
 
   useEffect(() => {
-    setWorkout(getWorkoutById(id))
+    const w = getWorkoutById(id)
+    setWorkout(w)
+    if (w) setExercises(getWorkoutExercises(w))
   }, [id])
 
   if (!workout) return null
 
-  const totalSets = workout.exercises.reduce((acc, ex) => acc + ex.sets.length, 0)
+  const totalSets = exercises.reduce((acc, ex) => acc + ex.sets.length, 0)
   const estimatedMinutes = Math.round(totalSets * 2.5)
 
   return (
@@ -37,7 +40,7 @@ export default function WorkoutDetailPage() {
         <div className="flex items-center gap-4 text-[#888] text-sm">
           <span className="flex items-center gap-1.5">
             <Flame size={14} />
-            {workout.exercises.length} ejercicios
+            {exercises.length} ejercicios
           </span>
           <span className="flex items-center gap-1.5">
             <Clock size={14} />
@@ -48,7 +51,7 @@ export default function WorkoutDetailPage() {
 
       {/* Exercise list */}
       <div className="flex-1 px-4 space-y-2 pb-36">
-        {workout.exercises.map((ex, i) => (
+        {exercises.map((ex, i) => (
           <div key={ex.id} className="bg-[#111] border border-[#222] rounded-xl px-4 py-3 flex items-start justify-between">
             <div>
               <div className="flex items-center gap-2 mb-0.5">

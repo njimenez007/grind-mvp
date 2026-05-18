@@ -8,36 +8,13 @@ import { Workout } from '@/lib/types'
 import { DAY_NAMES, DAY_FULL } from '@/lib/utils'
 import { calculateStreak } from '@/lib/gamification'
 import BottomNav from '@/components/BottomNav'
-
-const MOTIVATIONAL = [
-  'El progreso, no la perfección.',
-  'Cada repetición cuenta.',
-  'Hoy te conviertes en quien querías ser.',
-  'La consistencia gana.',
-  'Sin excusas. Solo resultados.',
-  'Tu cuerpo puede más de lo que tu mente cree.',
-  'Un día a la vez.',
-  'El esfuerzo de hoy es el resultado de mañana.',
-  'No pares cuando duela. Para cuando estés listo.',
-  'Sé la mejor versión de ti.',
-  'Disciplina > Motivación.',
-  'El silencio del trabajo duro habla más que las palabras.',
-  'No hay atajos.',
-  'Duele ahora, brilla después.',
-  'Haz que valga la pena.',
-]
+import { GrindLogo } from '@/components/GrindLogo'
 
 function getGreeting(): string {
   const h = new Date().getHours()
   if (h >= 5 && h < 12) return 'Buenos días'
   if (h >= 12 && h < 19) return 'Buenas tardes'
   return 'Buenas noches'
-}
-
-function getDayOfYear(): number {
-  const now = new Date()
-  const start = new Date(now.getFullYear(), 0, 0)
-  return Math.floor((now.getTime() - start.getTime()) / 86_400_000)
 }
 
 export default function HomePage() {
@@ -54,7 +31,6 @@ export default function HomePage() {
   }, [])
 
   const todayWorkout = workouts.find(w => w.days.includes(today)) ?? null
-  const quote = MOTIVATIONAL[getDayOfYear() % MOTIVATIONAL.length]
   const greeting = getGreeting()
 
   function workoutForDay(day: number): Workout | null {
@@ -62,100 +38,127 @@ export default function HomePage() {
   }
 
   return (
-    <div className="flex flex-col min-h-dvh bg-black">
+    <div className="flex flex-col min-h-dvh bg-[#0A0A0A]">
+
       {/* Header */}
-      <div className="flex items-center justify-between px-5 pt-14 pb-4">
-        <h1 className="text-2xl font-black tracking-tight">GRIND</h1>
+      <div className="flex items-center justify-between px-5 pt-14 pb-6">
+        <div className="flex items-center gap-2.5">
+          <GrindLogo size={26} />
+          <span className="text-sm font-bold tracking-[0.35em] uppercase text-white">GRIND</span>
+        </div>
         <button
           onClick={() => router.push('/notifications')}
-          className="text-[#555] hover:text-white transition-colors"
+          className="text-[#555] hover:text-white transition-colors p-1"
         >
-          <Bell size={20} />
+          <Bell size={19} strokeWidth={1.5} />
         </button>
       </div>
 
-      <div className="flex-1 px-5 pb-36 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto pb-36">
+
         {/* Greeting */}
-        <div className="mb-5">
-          <p className="text-[#555] text-sm">
+        <div className="px-5 mb-8">
+          <p className="text-[#8A8A8A] text-[11px] uppercase tracking-[0.18em] font-medium">
             {greeting} · {DAY_FULL[today]}
           </p>
-          <p className="text-[#444] text-sm mt-1 italic">"{quote}"</p>
+        </div>
+
+        {/* Hero motivacional */}
+        <div className="px-5 mb-8">
+          <h2 className="text-[2.6rem] font-black uppercase leading-[1.0] tracking-tight">
+            MENOS<br />EXCUSAS.<br />MÁS<br />CONSTANCIA.
+          </h2>
+          <p className="text-[#8A8A8A] text-[10px] uppercase tracking-[0.20em] font-semibold mt-4">
+            NO ES TALENTO. ES DISCIPLINA DIARIA.
+          </p>
         </div>
 
         {/* Streak */}
         {streak > 0 && (
-          <div className="flex items-center gap-2 mb-5">
-            <Flame size={16} className="text-orange-400" />
-            <span className="font-bold text-sm">
-              {streak} día{streak !== 1 ? 's' : ''} seguido{streak !== 1 ? 's' : ''}
-            </span>
+          <div className="px-5 mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-2 border border-white/10 rounded-full bg-white/[0.04]">
+              <Flame size={13} className="text-[#8A8A8A]" />
+              <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#DEDEDE]">
+                {streak} DÍA{streak !== 1 ? 'S' : ''} CONSECUTIVO{streak !== 1 ? 'S' : ''}
+              </span>
+            </div>
           </div>
         )}
 
-        {/* Today's workout — hero card */}
-        {todayWorkout ? (
-          <button
-            onClick={() => router.push(`/workout/${todayWorkout.id}`)}
-            className="w-full bg-white text-black rounded-2xl p-5 mb-6 text-left active:scale-[0.98] transition-transform"
-          >
-            <p className="text-[10px] font-bold uppercase tracking-widest text-black/40 mb-1">Hoy</p>
-            <h2 className="text-3xl font-black tracking-tight leading-tight">{todayWorkout.name}</h2>
-            <p className="text-black/50 text-sm mt-1">
-              {todayWorkout.exercises.length} ejercicios ·{' '}
-              ~{Math.round(todayWorkout.exercises.reduce((a, ex) => a + ex.sets.length, 0) * 2.5)} min
-            </p>
-            <div className="mt-4 flex items-center gap-2">
-              <Play size={14} fill="black" strokeWidth={0} />
-              <span className="font-bold text-sm">Iniciar entreno</span>
+        {/* Today's workout */}
+        <div className="px-5 mb-6">
+          {todayWorkout ? (
+            <>
+              <div className="bg-[#111] border border-white/10 rounded-2xl p-5 mb-3">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.20em] text-[#8A8A8A] mb-2">HOY</p>
+                <h3 className="text-2xl font-black tracking-tight">{todayWorkout.name}</h3>
+                <p className="text-[#8A8A8A] text-[11px] uppercase tracking-[0.12em] mt-1.5">
+                  {todayWorkout.exercises.length} EJERCICIOS ·{' '}
+                  ~{Math.round(todayWorkout.exercises.reduce((a, ex) => a + ex.sets.length, 0) * 2.5)} MIN
+                </p>
+              </div>
+              <button
+                onClick={() => router.push(`/workout/${todayWorkout.id}`)}
+                className="w-full h-14 bg-white text-black rounded-xl font-bold text-sm uppercase tracking-[0.08em] flex items-center justify-center gap-2.5 active:scale-[0.98] transition-transform"
+              >
+                <Play size={13} fill="black" strokeWidth={0} />
+                INICIAR ENTRENAMIENTO
+              </button>
+            </>
+          ) : (
+            <div className="bg-[#111] border border-white/10 rounded-2xl p-5">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.20em] text-[#8A8A8A] mb-2">HOY</p>
+              <p className="font-semibold text-[#DEDEDE]">Día de descanso</p>
+              <p className="text-[#555] text-[11px] uppercase tracking-[0.12em] mt-1.5">
+                Recupera y vuelve más fuerte.
+              </p>
             </div>
-          </button>
-        ) : (
-          <div className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-2xl p-5 mb-6">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-[#444] mb-1">Hoy</p>
-            <p className="text-[#555] font-semibold">Día de descanso</p>
-            <p className="text-[#333] text-xs mt-1">Recupera y vuelve más fuerte.</p>
-          </div>
-        )}
+          )}
+        </div>
 
         {/* Week calendar */}
-        <p className="text-[#444] text-[10px] uppercase tracking-widest font-medium mb-3">Esta semana</p>
-        <div className="space-y-1.5">
-          {DAY_FULL.map((_name, day) => {
-            const workout = workoutForDay(day)
-            const isToday = day === today
+        <div className="px-5">
+          <p className="text-[10px] uppercase tracking-[0.20em] text-[#555] font-semibold mb-3">
+            ESTA SEMANA
+          </p>
+          <div className="space-y-1">
+            {DAY_FULL.map((_name, day) => {
+              const workout = workoutForDay(day)
+              const isToday = day === today
 
-            return (
-              <button
-                key={day}
-                onClick={() => workout ? router.push(`/workout/${workout.id}`) : router.push('/routine')}
-                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl border transition-all active:scale-[0.98] ${
-                  isToday
-                    ? 'bg-[#111] border-[#333]'
-                    : workout
-                      ? 'bg-[#0a0a0a] border-[#1a1a1a] hover:border-[#333]'
-                      : 'bg-[#0a0a0a] border-[#111] hover:border-[#222]'
-                }`}
-              >
-                <div className="flex items-center gap-4">
-                  <span className={`font-mono text-[10px] w-7 ${isToday ? 'text-white font-bold' : 'text-[#444]'}`}>
-                    {DAY_NAMES[day].toUpperCase()}
-                  </span>
-                  {workout ? (
-                    <p className={`font-semibold text-sm ${isToday ? 'text-white' : 'text-[#666]'}`}>
-                      {workout.name}
-                    </p>
-                  ) : (
-                    <p className="text-[#333] text-sm">—</p>
+              return (
+                <button
+                  key={day}
+                  onClick={() => workout ? router.push(`/workout/${workout.id}`) : router.push('/routine')}
+                  className={`w-full flex items-center justify-between px-4 py-3 rounded-xl border transition-all active:scale-[0.98] ${
+                    isToday
+                      ? 'bg-white/[0.05] border-white/[0.14]'
+                      : 'border-white/[0.06] hover:border-white/10'
+                  }`}
+                >
+                  <div className="flex items-center gap-4">
+                    <span className={`font-mono text-[10px] w-7 uppercase tracking-wider ${
+                      isToday ? 'text-white font-bold' : 'text-[#555]'
+                    }`}>
+                      {DAY_NAMES[day]}
+                    </span>
+                    {workout ? (
+                      <p className={`font-medium text-sm ${isToday ? 'text-white' : 'text-[#8A8A8A]'}`}>
+                        {workout.name}
+                      </p>
+                    ) : (
+                      <p className="text-[#333] text-sm">—</p>
+                    )}
+                  </div>
+                  {workout && (
+                    <ChevronRight size={14} className={isToday ? 'text-[#555]' : 'text-[#2a2a2a]'} />
                   )}
-                </div>
-                {workout && (
-                  <ChevronRight size={14} className={isToday ? 'text-[#555]' : 'text-[#2a2a2a]'} />
-                )}
-              </button>
-            )
-          })}
+                </button>
+              )
+            })}
+          </div>
         </div>
+
       </div>
 
       <BottomNav />

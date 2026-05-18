@@ -2,16 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --background: #0A0A0A;
+  --surface: #111111;
+  --surface-soft: #181818;
+  --border: rgba(255, 255, 255, 0.10);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --text-primary: #FFFFFF;
+  --text-secondary: #DEDEDE;
+  --text-muted: #8A8A8A;
+  --text-disabled: #555555;
+  --accent: #FFFFFF;
+}
+
 * {
   -webkit-tap-highlight-color: transparent;
   box-sizing: border-box;
 }
 
 html, body {
-  background: #000;
-  color: #fff;
+  background: var(--background);
+  color: var(--text-primary);
   overscroll-behavior: none;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Sora', system-ui, sans-serif;
 }
 
 input[type='number'] {

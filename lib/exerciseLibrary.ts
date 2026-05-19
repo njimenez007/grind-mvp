@@ -115,7 +115,7 @@ export const EXERCISES: LibraryExercise[] = [
 
   {
     id: 'press-pecho',
-    name: 'Press de pecho',
+    name: 'Pecho central',
     muscle: 'Pecho',
     description: 'Movimiento de empuje horizontal desde el pecho. Trabajás pecho central, hombro anterior y tríceps. Bajás en 3 segundos, arriba explosivo.',
     why: 'Es el movimiento de empuje horizontal por excelencia. Activa la mayor cantidad de fibras del pecho en un solo movimiento. El tríceps y el hombro trabajan como soporte — por eso los tres se entrenan juntos en el día de push.',
@@ -130,7 +130,7 @@ export const EXERCISES: LibraryExercise[] = [
   },
   {
     id: 'press-inclinado',
-    name: 'Press inclinado',
+    name: 'Pecho superior',
     muscle: 'Pecho',
     description: 'Press en ángulo de 30–45°. Ataca el pecho superior y el deltoides anterior. Mismo patrón que el horizontal pero con ángulo inclinado.',
     why: 'El pecho superior da la forma completa al pecho. El press horizontal solo no lo desarrolla. Necesitás el ángulo inclinado para atacar esa parte.',
@@ -144,7 +144,7 @@ export const EXERCISES: LibraryExercise[] = [
   },
   {
     id: 'apertura-pecho',
-    name: 'Apertura de pecho',
+    name: 'Pecho interior',
     muscle: 'Pecho',
     description: 'Movimiento de aducción del hombro con brazos extendidos. Sentís el estiramiento profundo del pecho al bajar los brazos.',
     why: 'Complementa el press atacando las fibras del pecho desde el ángulo de abducción. Mejora el desarrollo interno y el rango de movimiento.',
@@ -157,7 +157,7 @@ export const EXERCISES: LibraryExercise[] = [
   },
   {
     id: 'fondos-pecho',
-    name: 'Fondos énfasis pecho',
+    name: 'Pecho inferior',
     muscle: 'Pecho',
     description: 'Fondos inclinando el tronco hacia adelante para cargar más el pecho que el tríceps. Codos ligeramente hacia afuera.',
     why: 'Ejercicio compuesto con peso corporal de alta demanda. El ángulo del tronco determina cuánto trabaja el pecho vs el tríceps.',
@@ -173,7 +173,7 @@ export const EXERCISES: LibraryExercise[] = [
 
   {
     id: 'press-hombro',
-    name: 'Press de hombro',
+    name: 'Hombro vertical',
     muscle: 'Hombros',
     description: 'Movimiento de empuje vertical. Codos a 90°, empujás el peso hacia arriba. Trabaja deltoides anterior y lateral con soporte del tríceps.',
     why: 'El press de pecho empuja hacia el frente — este empuja hacia arriba. Juntos cubren todos los ángulos del patrón de empuje. Sin press de hombro, el desarrollo del tren superior queda incompleto.',
@@ -187,7 +187,7 @@ export const EXERCISES: LibraryExercise[] = [
   },
   {
     id: 'elevaciones-laterales',
-    name: 'Elevaciones laterales',
+    name: 'Deltoides lateral',
     muscle: 'Hombros',
     description: 'Abducción de hombro hasta la altura de los hombros con brazos extendidos. Solo el deltoides lateral trabaja de forma directa aquí.',
     why: 'El deltoides lateral es el que da el ancho al hombro. El press solo activa el frontal — sin elevaciones laterales, el hombro se ve plano de frente aunque esté fuerte.',
@@ -201,7 +201,7 @@ export const EXERCISES: LibraryExercise[] = [
   },
   {
     id: 'elevaciones-frontales',
-    name: 'Elevaciones frontales',
+    name: 'Deltoides frontal',
     muscle: 'Hombros',
     description: 'Flexión de hombro con brazo extendido hacia adelante hasta la altura del hombro. Deltoides anterior y medial.',
     why: 'Complementa las elevaciones laterales. Trabaja el deltoides frontal de forma directa y controlada, que el press solo activa como secundario.',
@@ -218,7 +218,7 @@ export const EXERCISES: LibraryExercise[] = [
 
   {
     id: 'extension-triceps',
-    name: 'Extensión de tríceps',
+    name: 'Tríceps cabeza larga',
     muscle: 'Tríceps',
     description: 'Extensión de codo que aísla el tríceps. Los tres cabezales trabajan, especialmente el largo al elevar el brazo sobre la cabeza.',
     why: 'El tríceps es el 60% del volumen del brazo. Ya trabajó en todos los press anteriores como músculo secundario — este ejercicio lo aísla y lo termina. Sin trabajo directo, el brazo no se desarrolla de forma equilibrada.',
@@ -232,7 +232,7 @@ export const EXERCISES: LibraryExercise[] = [
   },
   {
     id: 'press-frances',
-    name: 'Press francés',
+    name: 'Tríceps elongado',
     muscle: 'Tríceps',
     description: 'Extensión de codo acostado en banco. La barra baja hacia la frente y vuelve. Trabaja el tríceps en posición elongada.',
     why: 'La posición elongada activa más fibras musculares que la extensión vertical. Ideal para añadir volumen de tríceps al final de la sesión de push.',
@@ -245,7 +245,7 @@ export const EXERCISES: LibraryExercise[] = [
   },
   {
     id: 'jalon-triceps',
-    name: 'Jalón de tríceps',
+    name: 'Tríceps aislamiento',
     muscle: 'Tríceps',
     description: 'Extensión de codo hacia abajo con polea o banda. Codos pegados al cuerpo, solo se mueve el antebrazo.',
     why: 'Permite ajustar la carga con precisión. Ideal al final del entrenamiento cuando el tríceps ya está prefatigado y necesita trabajo específico de aislamiento.',
@@ -261,7 +261,7 @@ export const EXERCISES: LibraryExercise[] = [
 
   {
     id: 'dominadas',
-    name: 'Dominadas / Jalón',
+    name: 'Dorsal ancho',
     muscle: 'Espalda',
     description: 'Jalón vertical: subís el cuerpo hacia la barra o jalás la barra hacia vos. Trabaja dorsal ancho, bíceps y romboides.',
     why: 'Es el ejercicio de espalda más completo. La relación fuerza/músculo desarrollado no tiene par entre los movimientos de halar. Si solo podés hacer un ejercicio de espalda, que sea este.',
@@ -275,7 +275,7 @@ export const EXERCISES: LibraryExercise[] = [
   },
   {
     id: 'remo',
-    name: 'Remo',
+    name: 'Dorsal grosor',
     muscle: 'Espalda',
     description: 'Jalón horizontal: tirás el peso hacia el abdomen con el tronco inclinado. Trabaja romboides, trapecio medio y dorsal.',
     why: 'El balance entre jalón vertical y horizontal previene la postura cifótica. Solo con dominadas la espalda se encorva. El remo da espalda ancha Y gruesa.',
@@ -289,7 +289,7 @@ export const EXERCISES: LibraryExercise[] = [
   },
   {
     id: 'peso-muerto',
-    name: 'Peso muerto convencional',
+    name: 'Cadena posterior',
     muscle: 'Espalda',
     description: 'Bisagra de cadera: levantás el peso del suelo hasta la posición erguida. Cadena posterior completa — isquios, glúteos, erector espinal y dorsal.',
     why: 'Es el ejercicio que activa más masa muscular total en un solo movimiento. La espalda baja, la cadena posterior y el agarre trabajan al límite. No hay sustituto para el peso muerto.',
@@ -305,7 +305,7 @@ export const EXERCISES: LibraryExercise[] = [
 
   {
     id: 'curl-biceps',
-    name: 'Curl de bíceps',
+    name: 'Bíceps pico',
     muscle: 'Bíceps',
     description: 'Flexión de codo con supinación del antebrazo. El antebrazo rota hacia afuera al subir para maximizar el pico del bíceps.',
     why: 'El bíceps es el músculo más visible del brazo. El curl es la forma más eficiente de trabajarlo directamente. El pull y el remo ya lo prefatigan — el curl lo termina.',
@@ -319,7 +319,7 @@ export const EXERCISES: LibraryExercise[] = [
   },
   {
     id: 'curl-martillo',
-    name: 'Curl martillo',
+    name: 'Bíceps braquial',
     muscle: 'Bíceps',
     description: 'Curl con agarre neutro (palma mirando adentro). Trabaja el braquial y el braquiorradial más que el curl supinado.',
     why: 'El braquial está debajo del bíceps. Desarrollarlo empuja el bíceps hacia arriba y da más grosor y altura al brazo. El curl clásico no lo trabaja directamente.',
@@ -335,7 +335,7 @@ export const EXERCISES: LibraryExercise[] = [
 
   {
     id: 'sentadilla',
-    name: 'Sentadilla',
+    name: 'Cuádriceps principal',
     muscle: 'Piernas',
     description: 'Flexión de rodilla hasta que los muslos queden paralelos al suelo. Espalda recta, peso en los talones. Cuádriceps, glúteos, isquios y core.',
     why: 'La sentadilla activa más masa muscular que cualquier otro ejercicio de tren inferior. Es el fundamento de las piernas — sin ella, nada más importa.',
@@ -350,7 +350,7 @@ export const EXERCISES: LibraryExercise[] = [
   },
   {
     id: 'zancadas',
-    name: 'Zancadas',
+    name: 'Cuádriceps unilateral',
     muscle: 'Piernas',
     description: 'Paso largo hacia adelante o atrás bajando la rodilla trasera cerca del suelo. Cuádriceps, glúteos y equilibrio.',
     why: 'Las zancadas corrigen desequilibrios entre pierna izquierda y derecha que la sentadilla puede enmascarar. La pierna dominante siempre compensa.',
@@ -364,7 +364,7 @@ export const EXERCISES: LibraryExercise[] = [
   },
   {
     id: 'peso-muerto-rumano',
-    name: 'Peso muerto rumano',
+    name: 'Isquios elongación',
     muscle: 'Piernas',
     description: 'Bisagra de cadera con rodillas semiflexas. El peso baja siguiendo la pierna mientras sentís el estiramiento en los isquios. Trabaja isquios y glúteos.',
     why: 'El isquiotibial se lesiona fácil si solo se trabaja en acortamiento (sentadilla, prensa). El RDL lo trabaja en elongación — la fase más importante para prevenir lesiones.',
@@ -378,7 +378,7 @@ export const EXERCISES: LibraryExercise[] = [
   },
   {
     id: 'curl-pierna',
-    name: 'Curl de pierna',
+    name: 'Isquios aislamiento',
     muscle: 'Piernas',
     description: 'Flexión de rodilla que aísla el isquiotibial. El único ejercicio que lo trabaja directamente en acortamiento.',
     why: 'El isquiotibial es el músculo que más se lesiona en el deporte. El curl lo fortalece en la fase de desaceleración — la que importa cuando frenás o girás rápido.',
@@ -392,7 +392,7 @@ export const EXERCISES: LibraryExercise[] = [
   },
   {
     id: 'sentadilla-bulgara',
-    name: 'Sentadilla búlgara',
+    name: 'Cuádriceps búlgara',
     muscle: 'Piernas',
     description: 'Sentadilla unilateral con el pie trasero elevado en banco. Bajás la rodilla trasera hacia el suelo. Alta demanda de cuádriceps y glúteos.',
     why: 'La versión más exigente de la sentadilla unilateral. Corrige desequilibrios y desarrolla cada pierna de forma completamente independiente.',
@@ -408,7 +408,7 @@ export const EXERCISES: LibraryExercise[] = [
 
   {
     id: 'hip-thrust',
-    name: 'Hip thrust',
+    name: 'Glúteo mayor',
     muscle: 'Glúteos',
     description: 'Apoyado de espaldas en banco, extendés la cadera hacia arriba con el peso sobre las caderas. Máximo aislamiento del glúteo mayor.',
     why: 'Ningún ejercicio activa el glúteo mayor tanto como el hip thrust. La sentadilla lo trabaja, pero el hip thrust lo termina. Es el complemento indispensable.',
@@ -422,7 +422,7 @@ export const EXERCISES: LibraryExercise[] = [
   },
   {
     id: 'glute-bridge',
-    name: 'Glute bridge',
+    name: 'Glúteo activación',
     muscle: 'Glúteos',
     description: 'Extensión de cadera desde el suelo acostado. Empujás las caderas hacia arriba apretando los glúteos en la parte alta.',
     why: 'Versión más accesible del hip thrust. Ideal para activar los glúteos al inicio de la sesión de piernas o como volumen adicional al final.',
@@ -496,7 +496,7 @@ export const EXERCISES: LibraryExercise[] = [
   },
   {
     id: 'crunch',
-    name: 'Crunch abdominal',
+    name: 'Abdomen superior',
     muscle: 'Core',
     description: 'Flexión de columna lumbar elevando solo los hombros del suelo. No es un sit-up completo — es un movimiento pequeño y controlado.',
     why: 'El crunch bien ejecutado es seguro y efectivo para el recto abdominal. El error más común es hacerlo largo (sit-up) en lugar de corto y controlado.',
@@ -510,7 +510,7 @@ export const EXERCISES: LibraryExercise[] = [
   },
   {
     id: 'elevacion-piernas',
-    name: 'Elevación de piernas',
+    name: 'Abdomen inferior',
     muscle: 'Core',
     description: 'Con piernas extendidas, las subís desde abajo hasta la vertical y las bajás lento sin tocar el suelo. Trabaja recto abdominal inferior.',
     why: 'La parte inferior del abdomen es la más difícil de desarrollar y la más débil en la mayoría de personas. La elevación de piernas es el ejercicio más directo para esa zona.',
@@ -524,7 +524,7 @@ export const EXERCISES: LibraryExercise[] = [
   },
   {
     id: 'russian-twist',
-    name: 'Russian twist',
+    name: 'Oblicuos',
     muscle: 'Core',
     description: 'Sentado con pies elevados, rotás el tronco de lado a lado tocando el suelo o llevando el peso. Trabaja oblicuos.',
     why: 'Los oblicuos son el músculo clave para la estabilidad lateral y la transferencia de fuerza entre tren superior e inferior. El abdomen frontal sin oblicuos es desequilibrio.',

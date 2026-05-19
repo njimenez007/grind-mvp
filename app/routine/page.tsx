@@ -220,7 +220,7 @@ function RoutineContent() {
           )}
         </div>
 
-        <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto px-4">
+        <div className="fixed left-0 right-0 max-w-md mx-auto px-4" style={{ bottom: 'calc(3.75rem + env(safe-area-inset-bottom))' }}>
           <button
             onClick={openCreate}
             className="w-full h-14 bg-white text-black font-bold text-sm uppercase tracking-[0.08em] rounded-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform"

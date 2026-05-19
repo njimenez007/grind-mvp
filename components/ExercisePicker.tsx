@@ -32,13 +32,13 @@ export default function ExercisePicker({ blockType, onAdd, onClose }: Props) {
   )
   const [selected, setSelected] = useState<LibraryExercise | null>(null)
 
-  // Configure state
+  // Configure state (strings so iOS can clear the field before typing)
   const defaults = defaultsForBlock(blockType)
   const [variant, setVariant] = useState('A')
-  const [sets, setSets] = useState(defaults.sets)
-  const [reps, setReps] = useState(defaults.reps)
-  const [rest, setRest] = useState(defaults.rest)
-  const [weight, setWeight] = useState(0)
+  const [sets, setSets] = useState(String(defaults.sets))
+  const [reps, setReps] = useState(String(defaults.reps))
+  const [rest, setRest] = useState(String(defaults.rest))
+  const [weight, setWeight] = useState('')
 
   const filtered = EXERCISES.filter(ex => {
     const matchesMuscle = !muscleFilter || ex.muscle === muscleFilter
@@ -52,10 +52,10 @@ export default function ExercisePicker({ blockType, onAdd, onClose }: Props) {
     const firstVariant = ex.variants[0]
     setVariant(firstVariant.label)
     const d = defaultsForBlock(blockType)
-    setSets(d.sets)
-    setReps(d.reps)
-    setRest(d.rest)
-    setWeight(0)
+    setSets(String(d.sets))
+    setReps(String(d.reps))
+    setRest(String(d.rest))
+    setWeight('')
     setScreen('configure')
   }
 
@@ -69,11 +69,11 @@ export default function ExercisePicker({ blockType, onAdd, onClose }: Props) {
       muscle: selected.muscle,
       selectedVariant: selectedV.label,
       variantName: selectedV.name,
-      sets,
-      reps,
-      restSeconds: rest,
+      sets: Math.max(1, parseInt(sets) || 1),
+      reps: Math.max(1, parseInt(reps) || 1),
+      restSeconds: parseInt(rest) || 0,
       weightType: selectedV.weightType as WeightType,
-      defaultWeight: selectedV.weightType === 'kg' ? weight : 0,
+      defaultWeight: selectedV.weightType === 'kg' ? (parseFloat(weight) || 0) : 0,
     }
     onAdd(exercise)
   }
@@ -159,9 +159,10 @@ export default function ExercisePicker({ blockType, onAdd, onClose }: Props) {
               <div>
                 <label className="text-[10px] text-[#555] uppercase tracking-wider block mb-1.5">Series</label>
                 <input
-                  type="number" inputMode="numeric"
+                  type="text" inputMode="numeric"
                   value={sets}
-                  onChange={e => setSets(Number(e.target.value) || 1)}
+                  onChange={e => setSets(e.target.value.replace(/[^0-9]/g, ''))}
+                  onBlur={() => setSets(String(Math.max(1, parseInt(sets) || 1)))}
                   className="w-full h-12 bg-[#111] border border-white/10 rounded-xl text-center font-mono font-bold text-base focus:outline-none focus:border-white/30"
                 />
               </div>
@@ -170,18 +171,20 @@ export default function ExercisePicker({ blockType, onAdd, onClose }: Props) {
                   {blockType === 'closing' ? 'Seg.' : 'Reps'}
                 </label>
                 <input
-                  type="number" inputMode="numeric"
+                  type="text" inputMode="numeric"
                   value={reps}
-                  onChange={e => setReps(Number(e.target.value) || 1)}
+                  onChange={e => setReps(e.target.value.replace(/[^0-9]/g, ''))}
+                  onBlur={() => setReps(String(Math.max(1, parseInt(reps) || 1)))}
                   className="w-full h-12 bg-[#111] border border-white/10 rounded-xl text-center font-mono font-bold text-base focus:outline-none focus:border-white/30"
                 />
               </div>
               <div>
                 <label className="text-[10px] text-[#555] uppercase tracking-wider block mb-1.5">Desc. (s)</label>
                 <input
-                  type="number" inputMode="numeric"
+                  type="text" inputMode="numeric"
                   value={rest}
-                  onChange={e => setRest(Number(e.target.value))}
+                  onChange={e => setRest(e.target.value.replace(/[^0-9]/g, ''))}
+                  onBlur={() => setRest(String(parseInt(rest) || 0))}
                   className="w-full h-12 bg-[#111] border border-white/10 rounded-xl text-center font-mono font-bold text-base focus:outline-none focus:border-white/30"
                 />
               </div>
@@ -191,9 +194,10 @@ export default function ExercisePicker({ blockType, onAdd, onClose }: Props) {
               <div className="mt-3">
                 <label className="text-[10px] text-[#555] uppercase tracking-wider block mb-1.5">Peso objetivo (kg)</label>
                 <input
-                  type="number" inputMode="decimal"
-                  value={weight || ''}
-                  onChange={e => setWeight(Number(e.target.value) || 0)}
+                  type="text" inputMode="decimal"
+                  value={weight}
+                  onChange={e => setWeight(e.target.value.replace(/[^0-9.]/g, ''))}
+                  onBlur={() => { const n = parseFloat(weight); setWeight(n > 0 ? String(n) : '') }}
                   placeholder="0"
                   className="w-full h-12 bg-[#111] border border-white/10 rounded-xl px-4 font-mono font-bold text-base focus:outline-none focus:border-white/30 placeholder:text-[#333]"
                 />

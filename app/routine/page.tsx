@@ -564,6 +564,11 @@ function ExerciseRow({
   onChange: (patch: Partial<RoutineExercise>) => void
   onRemove: () => void
 }) {
+  const [setsStr, setSetsStr] = useState(String(ex.sets))
+  const [repsStr, setRepsStr] = useState(String(ex.reps))
+  const [restStr, setRestStr] = useState(String(ex.restSeconds))
+  const [weightStr, setWeightStr] = useState(ex.defaultWeight > 0 ? String(ex.defaultWeight) : '')
+
   return (
     <div className="bg-[#111] border border-white/[0.08] rounded-xl p-3">
       {/* Top row */}
@@ -586,9 +591,10 @@ function ExerciseRow({
         <div className="flex-1">
           <label className="text-[9px] text-[#444] uppercase tracking-wider block mb-1">Series</label>
           <input
-            type="number" inputMode="numeric"
-            value={ex.sets}
-            onChange={e => onChange({ sets: Number(e.target.value) || 1 })}
+            type="text" inputMode="numeric"
+            value={setsStr}
+            onChange={e => setSetsStr(e.target.value.replace(/[^0-9]/g, ''))}
+            onBlur={() => { const v = Math.max(1, parseInt(setsStr) || 1); setSetsStr(String(v)); onChange({ sets: v }) }}
             className="w-full h-9 bg-[#1a1a1a] border border-white/[0.08] rounded-lg text-center font-mono text-sm font-bold focus:outline-none focus:border-white/20"
           />
         </div>
@@ -597,18 +603,20 @@ function ExerciseRow({
             {blockType === 'closing' ? 'Seg' : 'Reps'}
           </label>
           <input
-            type="number" inputMode="numeric"
-            value={ex.reps}
-            onChange={e => onChange({ reps: Number(e.target.value) || 1 })}
+            type="text" inputMode="numeric"
+            value={repsStr}
+            onChange={e => setRepsStr(e.target.value.replace(/[^0-9]/g, ''))}
+            onBlur={() => { const v = Math.max(1, parseInt(repsStr) || 1); setRepsStr(String(v)); onChange({ reps: v }) }}
             className="w-full h-9 bg-[#1a1a1a] border border-white/[0.08] rounded-lg text-center font-mono text-sm font-bold focus:outline-none focus:border-white/20"
           />
         </div>
         <div className="flex-1">
           <label className="text-[9px] text-[#444] uppercase tracking-wider block mb-1">Desc (s)</label>
           <input
-            type="number" inputMode="numeric"
-            value={ex.restSeconds}
-            onChange={e => onChange({ restSeconds: Number(e.target.value) })}
+            type="text" inputMode="numeric"
+            value={restStr}
+            onChange={e => setRestStr(e.target.value.replace(/[^0-9]/g, ''))}
+            onBlur={() => { const v = parseInt(restStr) || 0; setRestStr(String(v)); onChange({ restSeconds: v }) }}
             className="w-full h-9 bg-[#1a1a1a] border border-white/[0.08] rounded-lg text-center font-mono text-sm font-bold focus:outline-none focus:border-white/20"
           />
         </div>
@@ -616,9 +624,10 @@ function ExerciseRow({
           <div className="flex-1">
             <label className="text-[9px] text-[#444] uppercase tracking-wider block mb-1">Kg</label>
             <input
-              type="number" inputMode="decimal"
-              value={ex.defaultWeight || ''}
-              onChange={e => onChange({ defaultWeight: Number(e.target.value) || 0 })}
+              type="text" inputMode="decimal"
+              value={weightStr}
+              onChange={e => setWeightStr(e.target.value.replace(/[^0-9.]/g, ''))}
+              onBlur={() => { const v = parseFloat(weightStr) || 0; setWeightStr(v > 0 ? String(v) : ''); onChange({ defaultWeight: v }) }}
               placeholder="0"
               className="w-full h-9 bg-[#1a1a1a] border border-white/[0.08] rounded-lg text-center font-mono text-sm font-bold focus:outline-none focus:border-white/20 placeholder:text-[#333]"
             />

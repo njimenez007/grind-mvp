@@ -26,6 +26,11 @@ const BLOCK_HINT: Record<BlockType, string> = {
 
 const BLOCK_TYPES: BlockType[] = ['warmup', 'main', 'closing']
 
+const MUSCLE_OPTIONS = [
+  'Pecho', 'Hombros', 'Tríceps', 'Espalda', 'Bíceps',
+  'Piernas', 'Glúteos', 'Gemelos', 'Core',
+]
+
 function emptyBlocks(): RoutineBlock[] {
   return BLOCK_TYPES.map(type => ({ type, exercises: [] }))
 }
@@ -111,6 +116,14 @@ function RoutineContent() {
     setEditing({ ...editing, days })
   }
 
+  function toggleMuscle(muscle: string) {
+    if (!editing) return
+    const muscles = (editing.muscles ?? []).includes(muscle)
+      ? (editing.muscles ?? []).filter(m => m !== muscle)
+      : [...(editing.muscles ?? []), muscle]
+    setEditing({ ...editing, muscles })
+  }
+
   function addExercise(exercise: RoutineExercise) {
     if (!editing || !pickerBlock) return
     setEditing(prev => {
@@ -190,15 +203,27 @@ function RoutineContent() {
                     onClick={() => openDetail(w.id)}
                     className="w-full bg-[#111] border border-white/[0.08] rounded-2xl px-4 py-4 text-left hover:border-white/14 active:scale-[0.98] transition-all"
                   >
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="flex-1 min-w-0 pr-2">
                         <p className="font-black text-base tracking-tight">{w.name}</p>
-                        <p className="text-[#8A8A8A] text-xs mt-0.5">
+                        {w.description && (
+                          <p className="text-[#555] text-xs mt-0.5 leading-relaxed line-clamp-2">{w.description}</p>
+                        )}
+                        <p className="text-[#8A8A8A] text-xs mt-1">
                           {mainEx} ejercicio{mainEx !== 1 ? 's' : ''} principales · {totalEx} en total
                         </p>
                       </div>
                       <ChevronRight size={16} className="text-[#333] mt-1 shrink-0" />
                     </div>
+                    {w.muscles && w.muscles.length > 0 && (
+                      <div className="flex gap-1.5 flex-wrap mb-2">
+                        {w.muscles.map(m => (
+                          <span key={m} className="text-[10px] px-2 py-0.5 rounded-full bg-white/[0.06] border border-white/[0.10] text-[#8A8A8A] font-medium">
+                            {m}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                     {w.days.length > 0 && (
                       <div className="flex gap-1.5 flex-wrap">
                         {[0,1,2,3,4,5,6].map(d => (
@@ -220,7 +245,7 @@ function RoutineContent() {
           )}
         </div>
 
-        <div className="fixed left-0 right-0 max-w-md mx-auto px-4" style={{ bottom: 'calc(3.75rem + env(safe-area-inset-bottom))' }}>
+        <div className="fixed left-0 right-0 max-w-md mx-auto px-4" style={{ bottom: 'calc(4.5rem + env(safe-area-inset-bottom))' }}>
           <button
             onClick={openCreate}
             className="w-full h-14 bg-white text-black font-bold text-sm uppercase tracking-[0.08em] rounded-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform"
@@ -270,8 +295,20 @@ function RoutineContent() {
 
         <div className="px-5 pb-4">
           <h1 className="text-2xl font-black tracking-tight">{selected.name}</h1>
+          {selected.description && (
+            <p className="text-[#8A8A8A] text-sm mt-2 leading-relaxed">{selected.description}</p>
+          )}
+          {selected.muscles && selected.muscles.length > 0 && (
+            <div className="flex gap-1.5 mt-3 flex-wrap">
+              {selected.muscles.map(m => (
+                <span key={m} className="text-[10px] px-2.5 py-1 rounded-full bg-white/[0.06] border border-white/[0.12] text-[#DEDEDE] font-semibold uppercase tracking-wide">
+                  {m}
+                </span>
+              ))}
+            </div>
+          )}
           {selected.days.length > 0 && (
-            <div className="flex gap-1.5 mt-2 flex-wrap">
+            <div className="flex gap-1.5 mt-3 flex-wrap">
               {[0,1,2,3,4,5,6].map(d => (
                 <span
                   key={d}
@@ -408,6 +445,45 @@ function RoutineContent() {
                 placeholder="Ej: Push, Piernas, Full Body..."
                 className="w-full h-12 bg-[#111] border border-white/10 rounded-xl px-4 text-base font-bold focus:outline-none focus:border-white/30 placeholder:text-[#333]"
               />
+            </div>
+
+            {/* Description */}
+            <div>
+              <label className="text-[10px] uppercase tracking-[0.18em] text-[#555] font-semibold block mb-2">
+                DESCRIPCIÓN <span className="text-[#333] normal-case tracking-normal font-normal">(opcional)</span>
+              </label>
+              <textarea
+                value={editing.description ?? ''}
+                onChange={e => setEditing({ ...editing, description: e.target.value })}
+                placeholder="Ej: Día de empuje enfocado en pecho y hombros..."
+                rows={2}
+                className="w-full bg-[#111] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-white/30 placeholder:text-[#333] resize-none leading-relaxed"
+              />
+            </div>
+
+            {/* Muscles */}
+            <div>
+              <label className="text-[10px] uppercase tracking-[0.18em] text-[#555] font-semibold block mb-3">
+                MÚSCULOS QUE SE TRABAJAN <span className="text-[#333] normal-case tracking-normal font-normal">(opcional)</span>
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {MUSCLE_OPTIONS.map(m => {
+                  const active = (editing.muscles ?? []).includes(m)
+                  return (
+                    <button
+                      key={m}
+                      onClick={() => toggleMuscle(m)}
+                      className={`px-3 h-8 rounded-full text-[11px] font-semibold transition-all active:scale-95 ${
+                        active
+                          ? 'bg-white text-black'
+                          : 'bg-[#111] border border-white/10 text-[#555] hover:border-white/20'
+                      }`}
+                    >
+                      {m}
+                    </button>
+                  )
+                })}
+              </div>
             </div>
 
             {/* Days */}

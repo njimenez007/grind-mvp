@@ -39,6 +39,8 @@ export interface RoutineBlock {
 export interface Workout {
   id: string
   name: string
+  description?: string
+  muscles?: string[]
   days: number[]            // 0=Dom, 1=Lun … 6=Sáb
   blocks: RoutineBlock[]    // new format
   exercises?: Exercise[]    // legacy fallback

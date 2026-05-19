@@ -626,8 +626,8 @@ function ExerciseRow({
             <input
               type="text" inputMode="decimal"
               value={weightStr}
-              onChange={e => setWeightStr(e.target.value.replace(/[^0-9.]/g, ''))}
-              onBlur={() => { const v = parseFloat(weightStr) || 0; setWeightStr(v > 0 ? String(v) : ''); onChange({ defaultWeight: v }) }}
+              onChange={e => setWeightStr(e.target.value.replace(/[^0-9.,]/g, ''))}
+              onBlur={() => { const v = parseFloat(weightStr.replace(',', '.')) || 0; setWeightStr(v > 0 ? String(v) : ''); onChange({ defaultWeight: v }) }}
               placeholder="0"
               className="w-full h-9 bg-[#1a1a1a] border border-white/[0.08] rounded-lg text-center font-mono text-sm font-bold focus:outline-none focus:border-white/20 placeholder:text-[#333]"
             />

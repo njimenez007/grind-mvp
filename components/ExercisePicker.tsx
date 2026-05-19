@@ -73,7 +73,7 @@ export default function ExercisePicker({ blockType, onAdd, onClose }: Props) {
       reps: Math.max(1, parseInt(reps) || 1),
       restSeconds: parseInt(rest) || 0,
       weightType: selectedV.weightType as WeightType,
-      defaultWeight: selectedV.weightType === 'kg' ? (parseFloat(weight) || 0) : 0,
+      defaultWeight: selectedV.weightType === 'kg' ? (parseFloat(weight.replace(',', '.')) || 0) : 0,
     }
     onAdd(exercise)
   }
@@ -196,8 +196,8 @@ export default function ExercisePicker({ blockType, onAdd, onClose }: Props) {
                 <input
                   type="text" inputMode="decimal"
                   value={weight}
-                  onChange={e => setWeight(e.target.value.replace(/[^0-9.]/g, ''))}
-                  onBlur={() => { const n = parseFloat(weight); setWeight(n > 0 ? String(n) : '') }}
+                  onChange={e => setWeight(e.target.value.replace(/[^0-9.,]/g, ''))}
+                  onBlur={() => { const n = parseFloat(weight.replace(',', '.')); setWeight(n > 0 ? String(n) : '') }}
                   placeholder="0"
                   className="w-full h-12 bg-[#111] border border-white/10 rounded-xl px-4 font-mono font-bold text-base focus:outline-none focus:border-white/30 placeholder:text-[#333]"
                 />
